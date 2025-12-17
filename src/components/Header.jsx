@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 export default function Header() {
     return (
         <>
-            <header>
+            <header className="mb-4">
 
                 <div className="d-flex px-4 py-3 shadow-sm">
 

@@ -1,9 +1,8 @@
 import { Link } from 'react-router-dom';
-import viaggi from '../data/data';
 import { useEffect, useState } from 'react';
 
 
-export default function HomePage() {
+export default function HomePage({ viaggi }) {
     //set new array with viaggi array
     const [travels, setTravels] = useState(viaggi)
     // search variable connect to search input
@@ -69,7 +68,7 @@ export default function HomePage() {
                             travels.map(viaggio => (
                                 <div className="col" key={viaggio.id}>
                                     <div className="card">
-                                        <img className="card-img-top p-4" src="https://placehold.co/100" alt="Title" />
+                                        <img className="card-img-top p-4 home-card-img" src="https://placehold.co/300x200" alt="Title" />
                                         <div className="card-body px-4 pb-4 pt-0">
                                             <div className="destination d-flex justify-content-between">
                                                 <p className="card-text">Rotta:</p>
