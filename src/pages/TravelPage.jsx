@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 export default function TravelPage({ viaggi }) {
     const { id } = useParams();
@@ -32,6 +32,13 @@ export default function TravelPage({ viaggi }) {
         );
     });
 
+
+    function formatDate(dateStr) {
+        if (!dateStr) return "";
+        const [year, month, day] = dateStr.split("-");
+        return `${day}/${month}/${year}`;
+    }
+
     return (
         <div className="container w-50 my-3">
             {/* TRIP CARD */}
@@ -47,7 +54,10 @@ export default function TravelPage({ viaggi }) {
 
                     <div className="col-md-4">
                         <div className="card-body d-flex flex-column justify-content-center h-100 gap-4">
-                            <h3>{viaggio.destinazione}</h3>
+                            <div className="d-flex justify-content-between align-items-center">
+                                <h3 className="mb-0">{viaggio.destinazione}</h3>
+                                <Link to={'/'} className="btn btn-primary btn-sm"><i className="bi bi-arrow-return-right rotate"></i></Link>
+                            </div>
 
                             <div className="d-flex">
                                 <p className="card-text me-3 mb-0">Rotta:</p>
@@ -58,12 +68,12 @@ export default function TravelPage({ viaggi }) {
 
                             <div>
                                 <p className="card-text mb-0">Partenza:</p>
-                                <h5 className="card-title">{viaggio.dataInizio}</h5>
+                                <h5 className="card-title">{formatDate(viaggio.dataInizio)}</h5>
                             </div>
 
                             <div>
                                 <p className="card-text mb-0">Ritorno:</p>
-                                <h5 className="card-title">{viaggio.dataFine}</h5>
+                                <h5 className="card-title">{formatDate(viaggio.dataFine)}</h5>
                             </div>
 
                             <div>
