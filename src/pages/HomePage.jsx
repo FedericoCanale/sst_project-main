@@ -21,11 +21,20 @@ export default function HomePage({ viaggi, setViaggi }) {
         setTravels(filtered);
     }
 
-    //reset default array when the search input is nearly empty
+
     useEffect(() => {
-        if (search.length < 1) {
+        if (search.trim().length < 1) {
             setTravels(viaggi);
+            return;
         }
+
+        const filtered = viaggi.filter(
+            (travel) =>
+                travel.destinazione.toLowerCase().includes(search.toLowerCase()) ||
+                travel.partenza.toLowerCase().includes(search.toLowerCase())
+        );
+
+        setTravels(filtered);
     }, [search, viaggi]);
 
 
@@ -109,6 +118,11 @@ export default function HomePage({ viaggi, setViaggi }) {
             viaggiatori: [{ nome: "", cognome: "", telefono: "", mail: "", codiceFiscale: "" }],
         });
     }
+    function formatDate(dateStr) {
+        if (!dateStr) return "";
+        const [year, month, day] = dateStr.split("-");
+        return `${day}/${month}/${year}`;
+    }
 
     return (
         <>
@@ -117,7 +131,7 @@ export default function HomePage({ viaggi, setViaggi }) {
                     <div className="row my-3 align-items">
                         <div className="col-auto d-flex align-items-center">
                             <label htmlFor="travel" className="form-label mb-0">
-                                Cerca viaggio
+                                <strong>Cerca viaggio</strong>
                             </label>
                         </div>
 
@@ -158,11 +172,11 @@ export default function HomePage({ viaggi, setViaggi }) {
                                     <div className="dates d-flex justify-content-between mb-3">
                                         <div className="start">
                                             <p className="card-text mb-0">Partenza:</p>
-                                            <h5 className="card-title">{viaggio.dataInizio}</h5>
+                                            <h5 className="card-title">{formatDate(viaggio.dataInizio)}</h5>
                                         </div>
                                         <div className="comeback">
                                             <p className="card-text mb-0">Ritorno:</p>
-                                            <h5 className="card-title">{viaggio.dataFine}</h5>
+                                            <h5 className="card-title">{formatDate(viaggio.dataFine)}</h5>
                                         </div>
                                     </div>
 
@@ -228,10 +242,11 @@ export default function HomePage({ viaggi, setViaggi }) {
                             placeholder="Immagine (URL) es: https://..."
                             value={newTrip.imageUrl}
                             onChange={(e) => setNewTrip({ ...newTrip, imageUrl: e.target.value })}
+                            required
                         />
                     </div>
 
-
+                    {/* ACCOMPAGNATORI */}
                     <div className="mb-4">
                         <div className="d-flex justify-content-between align-items-center mb-2">
                             <h6 className="mb-0">Accompagnatori</h6>
@@ -247,6 +262,7 @@ export default function HomePage({ viaggi, setViaggi }) {
                                         className="form-control"
                                         placeholder="Nome"
                                         value={p.nome}
+                                        required
                                         onChange={(e) => {
                                             const updated = [...newTrip.accompagnatori];
                                             updated[i] = { ...updated[i], nome: e.target.value };
@@ -254,11 +270,13 @@ export default function HomePage({ viaggi, setViaggi }) {
                                         }}
                                     />
                                 </div>
+
                                 <div className="col-md-3">
                                     <input
                                         className="form-control"
                                         placeholder="Cognome"
                                         value={p.cognome}
+                                        required
                                         onChange={(e) => {
                                             const updated = [...newTrip.accompagnatori];
                                             updated[i] = { ...updated[i], cognome: e.target.value };
@@ -266,11 +284,13 @@ export default function HomePage({ viaggi, setViaggi }) {
                                         }}
                                     />
                                 </div>
+
                                 <div className="col-md-3">
                                     <input
                                         className="form-control"
                                         placeholder="Telefono"
                                         value={p.telefono}
+                                        required
                                         onChange={(e) => {
                                             const updated = [...newTrip.accompagnatori];
                                             updated[i] = { ...updated[i], telefono: e.target.value };
@@ -278,17 +298,21 @@ export default function HomePage({ viaggi, setViaggi }) {
                                         }}
                                     />
                                 </div>
+
                                 <div className="col-md-3 d-flex gap-2">
                                     <input
                                         className="form-control"
+                                        type="email"
                                         placeholder="Email"
                                         value={p.mail}
+                                        required
                                         onChange={(e) => {
                                             const updated = [...newTrip.accompagnatori];
                                             updated[i] = { ...updated[i], mail: e.target.value };
                                             setNewTrip({ ...newTrip, accompagnatori: updated });
                                         }}
                                     />
+
                                     {newTrip.accompagnatori.length > 1 && (
                                         <button
                                             type="button"
@@ -304,7 +328,7 @@ export default function HomePage({ viaggi, setViaggi }) {
                         ))}
                     </div>
 
-
+                    {/* VIAGGIATORI */}
                     <div className="mb-4">
                         <div className="d-flex justify-content-between align-items-center mb-2">
                             <h6 className="mb-0">Viaggiatori (max 15)</h6>
@@ -320,6 +344,7 @@ export default function HomePage({ viaggi, setViaggi }) {
                                         className="form-control"
                                         placeholder="Nome"
                                         value={p.nome}
+                                        required
                                         onChange={(e) => {
                                             const updated = [...newTrip.viaggiatori];
                                             updated[i] = { ...updated[i], nome: e.target.value };
@@ -327,11 +352,13 @@ export default function HomePage({ viaggi, setViaggi }) {
                                         }}
                                     />
                                 </div>
+
                                 <div className="col-md-2">
                                     <input
                                         className="form-control"
                                         placeholder="Cognome"
                                         value={p.cognome}
+                                        required
                                         onChange={(e) => {
                                             const updated = [...newTrip.viaggiatori];
                                             updated[i] = { ...updated[i], cognome: e.target.value };
@@ -339,11 +366,13 @@ export default function HomePage({ viaggi, setViaggi }) {
                                         }}
                                     />
                                 </div>
+
                                 <div className="col-md-2">
                                     <input
                                         className="form-control"
                                         placeholder="Telefono"
                                         value={p.telefono}
+                                        required
                                         onChange={(e) => {
                                             const updated = [...newTrip.viaggiatori];
                                             updated[i] = { ...updated[i], telefono: e.target.value };
@@ -351,11 +380,14 @@ export default function HomePage({ viaggi, setViaggi }) {
                                         }}
                                     />
                                 </div>
+
                                 <div className="col-md-3">
                                     <input
                                         className="form-control"
+                                        type="email"
                                         placeholder="Email"
                                         value={p.mail}
+                                        required
                                         onChange={(e) => {
                                             const updated = [...newTrip.viaggiatori];
                                             updated[i] = { ...updated[i], mail: e.target.value };
@@ -363,17 +395,20 @@ export default function HomePage({ viaggi, setViaggi }) {
                                         }}
                                     />
                                 </div>
+
                                 <div className="col-md-3 d-flex gap-2">
                                     <input
                                         className="form-control"
                                         placeholder="Codice fiscale"
                                         value={p.codiceFiscale}
+                                        required
                                         onChange={(e) => {
                                             const updated = [...newTrip.viaggiatori];
                                             updated[i] = { ...updated[i], codiceFiscale: e.target.value };
                                             setNewTrip({ ...newTrip, viaggiatori: updated });
                                         }}
                                     />
+
                                     {newTrip.viaggiatori.length > 1 && (
                                         <button
                                             type="button"
