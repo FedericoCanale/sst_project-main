@@ -5,7 +5,9 @@ export default function DefaultLayout() {
     return (
         <>
             <Header />
-            <Outlet />
+            <main className='pb-5'>
+                <Outlet />
+            </main>
         </>
     )
 }

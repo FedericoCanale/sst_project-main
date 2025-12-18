@@ -1,35 +1,39 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 export default function TravelPage({ viaggi }) {
     const { id } = useParams();
+    const viaggio = viaggi[id - 1]
 
-    const travelId = Number(id);
-    const selectedTrip = viaggi.find((trip) => trip.id === travelId);
 
     const [searchText, setSearchText] = useState("");
+    const [searchName, setSearchName] = useState("");
+    const [searchLast, setSearchLast] = useState("");
+    console.log(searchName, searchLast);
 
-    if (!selectedTrip) {
-        return (
-            <div className="container my-4">
-                <p>Viaggio non trovato.</p>
-            </div>
-        );
+    const [travelers, setTravelers] = useState(viaggio.viaggiatori)
+
+
+    function handleSubmit(e) {
+        e.preventDefault()
+
+        if (!searchLast) {
+            const filtered = travelers.filter(traveler => (
+                traveler.nome.toLowerCase().includes(searchName.toLowerCase()) ||
+                traveler.cognome.toLowerCase().includes(searchName.toLowerCase())
+            ))
+            setTravelers(filtered)
+        } else {
+            const filtered = travelers.filter(traveler => (
+                traveler.nome.toLowerCase().includes(searchName.toLowerCase()) &&
+                traveler.cognome.toLowerCase().includes(searchLast.toLowerCase())
+            ))
+            setTravelers(filtered)
+        }
     }
 
-    const filteredTravelers = selectedTrip.viaggiatori.filter((traveler) =>
-        `${traveler.nome} ${traveler.cognome}`
-            .toLowerCase()
-            .includes(searchText.toLowerCase())
 
-        /*const filtered = travels.filter((travel) =>
-        travel.destinazione.toLowerCase().includes(search.toLowerCase()) ||
-        travel.partenza.toLowerCase().includes(search.toLowerCase())
-    )
-    setTravels(filtered)
-    traveler.nome.toLowerCase().includes(searchText.toLowerCase()) || traveler.cognome.toLowerCase().includes(searchText.toLowerCase())
-    */
-    );
+
 
     return (
         <div className="container w-50 my-3">
@@ -46,30 +50,30 @@ export default function TravelPage({ viaggi }) {
 
                     <div className="col-md-4">
                         <div className="card-body d-flex flex-column justify-content-center h-100 gap-4">
-                            <h3>{selectedTrip.destinazione}</h3>
+                            <h3>{viaggio.destinazione}</h3>
 
                             <div className="d-flex">
                                 <p className="card-text me-3 mb-0">Rotta:</p>
                                 <h5 className="card-title m-0">
-                                    {selectedTrip.partenza}-{selectedTrip.destinazione}
+                                    {viaggio.partenza}-{viaggio.destinazione}
                                 </h5>
                             </div>
 
                             <div>
                                 <p className="card-text mb-0">Partenza:</p>
-                                <h5 className="card-title">{selectedTrip.dataInizio}</h5>
+                                <h5 className="card-title">{viaggio.dataInizio}</h5>
                             </div>
 
                             <div>
                                 <p className="card-text mb-0">Ritorno:</p>
-                                <h5 className="card-title">{selectedTrip.dataFine}</h5>
+                                <h5 className="card-title">{viaggio.dataFine}</h5>
                             </div>
 
                             <div>
                                 <p className="card-text mb-0">Accompagnatori:</p>
-                                {selectedTrip.accompagnatori.map((companion) => (
-                                    <h5 className="card-title m-0" key={companion.id}>
-                                        {companion.nome} {companion.cognome}
+                                {viaggio.accompagnatori.map((person) => (
+                                    <h5 className="card-title m-0" key={person.id}>
+                                        {person.nome} {person.cognome}
                                     </h5>
                                 ))}
                             </div>
@@ -79,13 +83,17 @@ export default function TravelPage({ viaggi }) {
             </div>
 
             {/* SEARCH BAR */}
-            <form className="mb-3" onSubmit={(event) => event.preventDefault()}>
+            <form className="mb-3" onSubmit={handleSubmit}>
                 <div className="input-group">
                     <input
                         className="form-control"
                         placeholder="Cerca viaggiatori (nome/cognome)"
                         value={searchText}
-                        onChange={(event) => setSearchText(event.target.value)}
+                        onChange={(e) => {
+                            setSearchText(e.target.value)
+                            setSearchName(e.target.value.split(' ')[0])
+                            setSearchLast(e.target.value.split(' ')[1])
+                        }}
                     />
                     <button className="btn btn-primary" type="submit">
                         Cerca
@@ -95,60 +103,58 @@ export default function TravelPage({ viaggi }) {
 
             {/* TRAVELERS ACCORDION */}
             <div className="accordion" id="travelersAccordion">
-                {filteredTravelers.map((traveler, index) => {
-                    const accordionItemKey = `${traveler.id}-${index}`;
-                    const collapseId = `collapse-${accordionItemKey}`;
-
-                    return (
-                        <div className="accordion-item" key={accordionItemKey}>
-                            <h2 className="accordion-header">
-                                <button
-                                    className="accordion-button collapsed"
-                                    type="button"
-                                    data-bs-toggle="collapse"
-                                    data-bs-target={`#${collapseId}`}
-                                    aria-expanded="false"
-                                    aria-controls={collapseId}
-                                >
-                                    {traveler.nome} {traveler.cognome}
-                                </button>
-                            </h2>
-
-                            <div id={collapseId} className="accordion-collapse collapse">
-                                <div className="accordion-body">
-                                    <div>
-                                        <strong>Telefono:</strong> {traveler.telefono || "-"}
+                {
+                    travelers.map(traveler => {
+                        return (
+                            <div className="accordion-item" key={traveler.id}>
+                                <h2 className="accordion-header">
+                                    <button
+                                        className="accordion-button collapsed"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target={`#collapse${traveler.id}`}
+                                        aria-expanded="false"
+                                        aria-controls={`collapse${traveler.id}`}>
+                                        {traveler.nome} {traveler.cognome}
+                                    </button>
+                                </h2>
+                                <div
+                                    id={`collapse${traveler.id}`}
+                                    className="accordion-collapse collapse"
+                                    data-bs-parent="#accordionExample">
+                                    <div className="accordion-body">
+                                        <div>
+                                            <strong>Telefono:</strong> {traveler.telefono || "-"}
+                                        </div>
+                                        <div>
+                                            <strong>Email:</strong> {traveler.mail || "-"}
+                                        </div>
+                                        <div className="mb-2">
+                                            <strong>Codice fiscale:</strong> {traveler.codiceFiscale || "-"}
+                                        </div>
+                                        {
+                                            traveler.telefono ? (
+                                                <a className="btn btn-success" href={`tel:${traveler.telefono}`}                                                >
+                                                    Chiama
+                                                </a>
+                                            ) : (
+                                                <button className="btn btn-secondary" disabled>
+                                                    Chiama
+                                                </button>
+                                            )
+                                        }
                                     </div>
-                                    <div>
-                                        <strong>Email:</strong> {traveler.mail || "-"}
-                                    </div>
-                                    <div className="mb-2">
-                                        <strong>Codice fiscale:</strong>{" "}
-                                        {traveler.codiceFiscale || "-"}
-                                    </div>
-
-                                    {traveler.telefono ? (
-                                        <a
-                                            className="btn btn-success"
-                                            href={`tel:${traveler.telefono}`}
-                                        >
-                                            Chiama
-                                        </a>
-                                    ) : (
-                                        <button className="btn btn-secondary" disabled>
-                                            Chiama
-                                        </button>
-                                    )}
                                 </div>
                             </div>
-                        </div>
-                    );
-                })}
+                        )
+                    })
+                }
+
             </div>
 
-            {filteredTravelers.length === 0 && (
+            {/* {filteredTravelers.length === 0 && (
                 <p className="mt-3">Nessun viaggiatore trovato.</p>
-            )}
+            )} */}
         </div>
     );
 }
