@@ -5,6 +5,7 @@ const viaggi = [
         partenza: "Milano",
         dataInizio: "2026-01-15",
         dataFine: "2026-01-20",
+        immagine: "https://www.storiavivaviaggi.it/wp-content/uploads/roma-in-3-giorni.jpg",
         accompagnatori: [
             { id: 1, nome: "Luca", cognome: "Bianchi", telefono: "3331234567", mail: "luca.bianchi@email.com" },
             { id: 2, nome: "Giulia", cognome: "Rossi", telefono: "3339876543", mail: "giulia.rossi@email.com" }
@@ -28,10 +29,10 @@ const viaggi = [
         partenza: "Torino",
         dataInizio: "2026-02-05",
         dataFine: "2026-02-12",
+        immagine: "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcTYp3n1HRVupXPxz1v9mZLMKd91eAK6a3aWRXOmD8itQLQ36_FIkAMc-h_j0RDj68nINoMkGK5VBc6Mf02fwDloIjs&s=19",
         accompagnatori: [
             { id: 1, nome: "Alessandro", cognome: "Ferri", telefono: "3341122334", mail: "alessandro.ferri@email.com" },
-            { id: 2, nome: "Giulia", cognome: "Rossi", telefono: "3339876543", mail: "giulia.rossi@email.com" },
-
+            { id: 2, nome: "Giulia", cognome: "Rossi", telefono: "3339876543", mail: "giulia.rossi@email.com" }
         ],
         viaggiatori: [
             { id: 1, nome: "Alice", cognome: "Marini", telefono: "3291112233", mail: "alice.marini@email.com", codiceFiscale: "MRNALS92A01H501X" },
@@ -47,6 +48,5 @@ const viaggi = [
         ]
     }
 ];
-
 
 export default viaggi;
